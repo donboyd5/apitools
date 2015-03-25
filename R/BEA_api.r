@@ -40,20 +40,39 @@ BEA_DSlist <- function(key=BEA_defaultkey()){
   fromJSON(result)$BEAAPI$Results$Dataset # returns a data frame
 }
 
-#
-# BEA_DSlist()
-#
-# # (tmp <- getBEA_DSlist(beaapikey))
-# # Key datasets for our purposes are NIPA and NIUnderlyingDetail
-#
-# # Get list of parameters needed to retrieve data for a particular dataset ####
-# getBEA_DSparams <- function(dsname, key=beaapikey) {
-#   # get parameters for a given bea dataset
-#   url <- paste0("http://www.bea.gov/api/data?&UserID=", key, "&method=GetParameterList&datasetname=", dsname,"&")
-#   result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
-#   df <- fromJSON(result)$BEAAPI$Results$Parameter # returns a data frame
-#   return(df)
-# }
+
+#' @title Get Parameters for a Particular BEA Dataset
+#'
+#' @description
+#' \code{BEA_DSparams} returns a data frame with a list of available data sets
+#'
+#' @usage BEA_DSparams(dsname, yourbeakeyhere)
+#' @param dsname text name of the dataset (see \code{BEA_DSlist})
+#' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
+#' @details
+#' Queries the BEA API to get list of parameters needed to retrieve data for a particular dataset. Particularly useful datasets are NIPA and NIUnderlyingDetail
+#' @return data frame with columns:
+#'   "ParameterName"
+#'   "ParameterDataType"
+#'   "ParameterDescription"
+#'   "ParameterIsRequiredFlag"
+#'   "MultipleAcceptedFlag"
+#'   "AllValue"
+#'   "ParameterDefaultValue"
+#' @keywords BEA_DSparams
+#' @export
+#' @examples
+#' bea.param <- BEA_DSparams("NIPA") # don't need to give it a key if you have yours set
+#' BEA_DSparams("NIUnderlyingDetail")
+BEA_DSparams <- function(dsname, key=BEA_defaultkey()) {
+  # get parameters for a given bea dataset
+  url <- paste0(BEA_url(), "?&UserID=", key, "&method=GetParameterList&datasetname=", dsname,"&")
+  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
+  df <- fromJSON(result)$BEAAPI$Results$Parameter # returns a data frame
+  return(df)
+}
+
+
 #
 # # getBEA_DSparams("NIPA") # does NOT accept multiple table flags
 # # getBEA_DSparams("NIUnderlyingDetail") # does NOT accept multiple table flags

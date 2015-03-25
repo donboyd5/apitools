@@ -49,6 +49,7 @@ install("apitools")
 #       library(roxygen2)  # make sure latest from github is installed:  devtools::install_github("yihui/roxygen2")
 # 0.b Create the package directory if this is a new package:
 #       create("apitools")
+# 0.c Create a README.md file so that documentation is easily found from within R by, for example, typeing ?apitools
 # 1. Revise/add functions and documentation, etc. - see examples below
 # 2. Create markup documentation for the revised package via:
 #       document()
