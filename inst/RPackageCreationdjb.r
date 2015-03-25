@@ -34,6 +34,8 @@
 #
 #   https://github.com/settings/ssh
 
+# http://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html
+
 getOption("defaultPackages")
 
 # Once the package is in full gear, here are the basic steps, DETAILED below
