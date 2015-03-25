@@ -36,12 +36,21 @@ getOption("defaultPackages")
 # 2. Create markup documentation for the revised package via:
 #       document()
 # 3. Install the package locally
-#       setwd("..")
+#       setwd("..") # maybe not needed
 #       install("apitools")
-# 4. Upload revised package to github
-#       - select commit from the github button on toolbar above
+# 4. Commit changes locally to git
+#       - select commit from the git button on toolbar above
 #       - press commit to commit the changes to the local repository (git on my computer)
-#       - then push to send the new version to the github internet repository
+# 5. Upload revised package to github (see http://r-pkgs.had.co.nz/git.html#git)
+#       - create a new repo on github if not already done:
+#           go to: https://github.com/new
+#           create a repo with the same name as the package (e.g., apitools)
+#       - initialize the repo
+#           open the git shell from within RStudio
+#           push the repo from the PC to the web with these two commands:
+#             git remote add origin https://github.com/donboyd5/apitools.git
+#             git push -u origin master
+#       - after this initialization, do pushes from within RStudio
 #       - uid id donboyd5, pw is the 8 chars pw
 # 5. Optionally install from github
 #       devtools::install_github("donboyd5/apitools")
