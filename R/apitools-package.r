@@ -14,5 +14,5 @@
 #' 4) If you need information about allowable parameters, use BEA_ParamVals()
 
 #' Here are the steps in action
-
+NULL
 
