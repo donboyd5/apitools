@@ -17,19 +17,6 @@
 # BEA_url()
 # BEA_defaultkey()
 
-# #' @title Capitalize first letter of each word
-# #'
-# #' @description \code{capwords} capitalize first letter of each word
-# #' @usage capwords(s)
-# #' @param s The string to capitalize words of
-# #' @details All white space is removed from the trailing (right) side of the string.
-# #' @return The initial-capped result.
-# #' @keywords capwords
-# #' @export
-# #' @examples
-# #' capwords("string to capitalize words in")
-
-
 #' @title Get a List of Datasets Available from the BEA API
 #'
 #' @description
@@ -40,6 +27,7 @@
 #' @details
 #' Queries the BEA API to get a list of available datasets
 #' @return data frame with columns DatasetName and DatasetDescription
+#' @keywords BEA_DSlist
 #' @export
 #' @examples
 #' bea.ds <- BEA_DSlist() # don't need to give it a key if you have yours set
@@ -51,6 +39,7 @@ BEA_DSlist <- function(key=BEA_defaultkey()){
   # fromJSON(results) # to see full structure
   fromJSON(result)$BEAAPI$Results$Dataset # returns a data frame
 }
+
 #
 # BEA_DSlist()
 #
