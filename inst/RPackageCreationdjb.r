@@ -26,6 +26,12 @@
 
 getOption("defaultPackages")
 
+# Once the package is in full gear, here are the basic steps, DETAILED below
+library(devtools)
+library(roxygen2)
+document()
+install("apitools")
+
 # Steps for creating, revising, documenting, installing, and uploading a package to github:
 # 0.a Load needed packages
 #       library(devtools)
