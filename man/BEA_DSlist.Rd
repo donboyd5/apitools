@@ -4,7 +4,7 @@
 \alias{BEA_DSlist}
 \title{Get a List of Datasets Available from the BEA API}
 \usage{
-BEA_DSlist(yourbeakeyhere)
+BEA_DSlist(your_bea_key)
 }
 \arguments{
 \item{key}{Your BEA API key (can be obtained for free - check www.bea.gov)}
@@ -13,7 +13,7 @@ BEA_DSlist(yourbeakeyhere)
 data frame with columns DatasetName and DatasetDescription
 }
 \description{
-\code{BEA_DSlist} returns a data frame with a list of available data sets
+\code{BEA_DSlist} returns a data frame with a list of available datasets
 }
 \details{
 Queries the BEA API to get a list of available datasets

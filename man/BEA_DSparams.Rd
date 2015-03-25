@@ -4,7 +4,7 @@
 \alias{BEA_DSparams}
 \title{Get Parameters for a Particular BEA Dataset}
 \usage{
-BEA_DSparams(dsname, yourbeakeyhere)
+BEA_DSparams(dsname, your_bea_key)
 }
 \arguments{
 \item{dsname}{text name of the dataset (see \code{BEA_DSlist})}
@@ -22,7 +22,9 @@ data frame with columns:
   "ParameterDefaultValue"
 }
 \description{
-\code{BEA_DSparams} returns a data frame with a list of available data sets
+\code{BEA_DSparams} returns a data frame with a list of parameters for the particular dataset
+Pay particular attention to whether a data set will accept multiple table flags, or whether tables must be
+retrieved one by one
 }
 \details{
 Queries the BEA API to get list of parameters needed to retrieve data for a particular dataset. Particularly useful datasets are NIPA and NIUnderlyingDetail

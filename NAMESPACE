@@ -2,3 +2,4 @@
 
 export(BEA_DSlist)
 export(BEA_DSparams)
+export(BEA_ParamVals)

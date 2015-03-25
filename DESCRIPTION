@@ -1,10 +1,10 @@
 Package: apitools
 Type: Package
 Title: Tools For Using the BEA and Census APIs
-Version: 0.1
+Version: 0.2
 Date: 2015-03-25
 Author: "Don Boyd <donboyd5@gmail.com> [aut, cre]"
 Maintainer: <donboyd5@gmail.com>
-Description: Easy ways to get info about data on BEA and Census sites, and to get the data
+Description: Easy ways to get info about data available through the BEA and Census APIs, and to then get the data
 License: What license is it under?
 LazyData: TRUE
