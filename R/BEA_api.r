@@ -58,6 +58,7 @@ BEA_DSlist <- function(key=BEA_defaultkey()){
 #' @examples
 #' bea.param <- BEA_DSparams("NIPA") # don't need to give it a key if you have yours set
 #' BEA_DSparams("NIUnderlyingDetail")
+#' BEA_DSparams("RegionalData")
 BEA_DSparams <- function(dsname, key=BEA_defaultkey()) {
   require(RCurl)
   require(jsonlite)
@@ -135,17 +136,6 @@ NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey(), ve
   require(dplyr)
   if(verbose) print(paste0("Getting TableID: ", tableid))
 
-  getyear <- function(TimePeriod) year <- as.numeric(substr(TimePeriod, 1, 4))
-
-  getdate <- function(TimePeriod) { # if quarterly data we want the first day of quarter
-    TimePeriod <- as.character(TimePeriod)
-    year <- as.numeric(substr(TimePeriod, 1, 4))
-    qtr <- as.numeric(substr(TimePeriod, 6, 6))
-    month <- qtr * 3 - 2
-    date <- as.Date(ISOdate(year, month, 1))
-    return(date)
-  }
-
   upart1 <- paste0(BEA_url(), "?&UserID=", key)
   upart2 <- paste0("&method=GetData&datasetname=", dsname)
   upart3 <- paste0("&TableID=", tableid)
@@ -216,4 +206,62 @@ NIPA_DataMult <- function(nipatablenames, freq="q", dsname="NIPA", key=BEA_defau
 }
 
 
+#' @title Get BEA regional data
+#'
+#' @description
+#' \code{BEA_RgnData} returns a data frame with requested regional data. Right now only works with annual.
+#' @usage BEA_RgnData(keycode, key)
+#' @param keycode a variable name (see \code{BEA_ParamVals}); default: no default
+#' @param key Your BEA API key (can be obtained for free - check www.bea.gov); default: my key
+#' @details
+#' Queries the BEA API to get the data. It determines from the keycode whether it is annual or quarterly data
+#' @return data frame with the regional data
+#' @keywords BEA_RgnData
+#' @export
+#' @examples
+#' BEA_DSparams("RegionalData")
+#' geofips <- BEA_ParamVals("RegionalData", "GeoFips")
+#' head(geofips)
+#' BEA_ParamVals("RegionalData", "KeyCode")
+#' keycode <- "GDP_SP"
+#' df <- BEA_RgnData(keycode)
+#' head(df)
+#' # Now get quarterly data
+#' df <- BEA_RgnData("PROP_QI")
+#' head(df)
+BEA_RgnData <- function(keycode, key=BEA_defaultkey()) {
+  require(btools)
+  require(RCurl)
+  require(jsonlite)
+  require(dplyr)
+  require(lubridate)
+  if(str_sub(keycode, -3)=="_QI") freq <- "Q" else freq <- "A"
+  dsname <- "RegionalData"
+  upart1 <- paste0(BEA_url(), "?&UserID=", key)
+  upart2 <- paste0("&method=GetData&datasetname=", dsname)
+  upart3 <- paste0("&KeyCode=", keycode)
+  upart4 <- paste0("&Year=ALL&GeoFips=STATE&ResultFormat=JSON&")
+  url <- paste0(upart1, upart2, upart3, upart4)
+  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # sometimes this slow
 
+  df <- fromJSON(result)$BEAAPI$Results$Data %>%
+    mutate(value=cton(DataValue))
+  if(toupper(freq)=="A") df$year <- getyear(df$TimePeriod) else
+    if(toupper(freq)=="Q") df$date <- getdate(df$TimePeriod)
+
+  df <- df %>% select(-DataValue)
+  return(df)
+}
+
+
+# Helper functions -------------------------
+getyear <- function(TimePeriod) year <- as.numeric(substr(TimePeriod, 1, 4))
+
+getdate <- function(TimePeriod) { # if quarterly data we want the first day of quarter
+  TimePeriod <- as.character(TimePeriod)
+  year <- as.numeric(substr(TimePeriod, 1, 4))
+  qtr <- as.numeric(substr(TimePeriod, 6, 6))
+  month <- qtr * 3 - 2
+  date <- as.Date(ISOdate(year, month, 1))
+  return(date)
+}

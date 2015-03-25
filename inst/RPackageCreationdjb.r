@@ -35,6 +35,7 @@
 #   https://github.com/settings/ssh
 
 # http://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html
+# http://cran.r-project.org/web/packages/roxygen2/vignettes/formatting.html
 
 getOption("defaultPackages")
 

@@ -3,6 +3,7 @@
 export(BEA_DSlist)
 export(BEA_DSparams)
 export(BEA_ParamVals)
+export(BEA_RgnData)
 export(NIPATableIDs)
 export(NIPA_Data)
 export(NIPA_DataMult)

@@ -32,6 +32,7 @@ Queries the BEA API to get list of parameters needed to retrieve data for a part
 \examples{
 bea.param <- BEA_DSparams("NIPA") # don't need to give it a key if you have yours set
 BEA_DSparams("NIUnderlyingDetail")
+BEA_DSparams("RegionalData")
 }
 \keyword{BEA_DSparams}
 
