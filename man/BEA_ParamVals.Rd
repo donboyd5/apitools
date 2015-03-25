@@ -4,7 +4,7 @@
 \alias{BEA_ParamVals}
 \title{Get Parameter Values for a Parameter in a Chosen BEA Dataset}
 \usage{
-BEA_ParamVals(dsname, yourbeakeyhere)
+BEA_ParamVals(dsname, your_bea_key)
 }
 \arguments{
 \item{dsname}{text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})}
@@ -29,6 +29,7 @@ nipa.tablist <- BEA_ParamVals("NIPA", "TableID") # don't need to give a key if y
 head(nipa.tablist)
 nipa.uld.tablist <- BEA_ParamVals("NIUnderlyingDetail", "TableID") # don't need to give a key if you have yours set
 head(nipa.uld.tablist)
+BEA_ParamVals("RegionalData", "KeyCode") # TPI_SI is Total personal income (state annual income)
 }
 \keyword{BEA_ParamVals}
 

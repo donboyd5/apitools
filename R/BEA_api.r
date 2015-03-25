@@ -7,13 +7,6 @@
 # NIPA underlying detail: http://www.bea.gov/iTable/index_UD.cfm
 
 
-# Define data to get:
-#   TableID 1 has GDP (e.g., pch)
-#   TableID 88 has govt
-#   TableID 4 has price indexes
-#
-#   Year=X gets all years
-
 
 #' @title Get a List of Datasets Available from the BEA API
 #'
@@ -37,6 +30,7 @@ BEA_DSlist <- function(key=BEA_defaultkey()){
   # fromJSON(results) # to see full structure
   fromJSON(result)$BEAAPI$Results$Dataset # returns a data frame
 }
+
 
 
 #' @title Get Parameters for a Particular BEA Dataset
@@ -75,8 +69,6 @@ BEA_DSparams <- function(dsname, key=BEA_defaultkey()) {
 
 
 
-#
-# #  Get parameter values for a parameter, for each data set -- IMPORTANT for the parameter TableID ####
 #' @title Get Parameter Values for a Parameter in a Chosen BEA Dataset
 #'
 #' @description
@@ -84,7 +76,7 @@ BEA_DSparams <- function(dsname, key=BEA_defaultkey()) {
 #' Pay particular attention to whether a data set will accept multiple table flags, or whether tables must be
 #' retrieved one by one
 #'
-#' @usage BEA_ParamVals(dsname, yourbeakeyhere)
+#' @usage BEA_ParamVals(dsname, your_bea_key)
 #' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})
 #' @param pname text name of the parameter of interest (e.g., "TableID" for the dataset "NIPA")  (see \code{BEA_DSparams})
 #' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
@@ -98,6 +90,7 @@ BEA_DSparams <- function(dsname, key=BEA_defaultkey()) {
 #' head(nipa.tablist)
 #' nipa.uld.tablist <- BEA_ParamVals("NIUnderlyingDetail", "TableID") # don't need to give a key if you have yours set
 #' head(nipa.uld.tablist)
+#' BEA_ParamVals("RegionalData", "KeyCode") # TPI_SI is Total personal income (state annual income)
 BEA_ParamVals <- function(dsname, pname, key=BEA_defaultkey()) {
   require(RCurl)
   require(jsonlite)
@@ -108,5 +101,67 @@ BEA_ParamVals <- function(dsname, pname, key=BEA_defaultkey()) {
   df <- fromJSON(result)$BEAAPI$Results$ParamValue # returns a data frame
   return(df)
 }
+
+
+
+#' @title Get Data from a NIPA Table or a NIPA Underlying Detail Table (NIUnderlyingDetail)
+#'
+#' @description
+#' \code{NIPA_Data} returns a data frame with a list of parameters for the particular dataset
+#' Pay particular attention to whether a data set will accept multiple table flags, or whether tables must be
+#' retrieved one by one
+#'
+#' @usage NIPA_Data(tableid, freq, dsname, key)
+#' @param tableid the BEA table identifier (see \code{BEA_ParamVals})
+#' @param freq "q" or "a"
+#' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})
+#' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
+#' @details
+#' Queries the BEA API to get data
+#' @return data frame with data
+#' @keywords NIPA_Data
+#' @export
+#' @examples
+#' # quarterly gdp percent change NIPA TableID 1 ####
+#' head(NIPA_Data(1, "q"))
+#' gdppch <- NIPA_Data(1, "q") %>% # NIPA is default dsname so don't have to specify it
+#'   filter(SeriesCode=="A191RL") %>%
+#'   select(date, gdppch=value)
+#' head(gdppch)
+NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey()) {
+  # NOTE: freq should be q or a
+  require(RCurl)
+  require(jsonlite)
+  require(dplyr)
+
+  getyear <- function(TimePeriod) year <- as.numeric(substr(TimePeriod, 1, 4))
+
+  getdate <- function(TimePeriod) { # if quarterly data we want the first day of quarter
+    TimePeriod <- as.character(TimePeriod)
+    year <- as.numeric(substr(TimePeriod, 1, 4))
+    qtr <- as.numeric(substr(TimePeriod, 6, 6))
+    month <- qtr * 3 - 2
+    date <- as.Date(ISOdate(year, month, 1))
+    return(date)
+  }
+
+  upart1 <- paste0(BEA_url(), "?&UserID=", key)
+  upart2 <- paste0("&method=GetData&datasetname=", dsname)
+  upart3 <- paste0("&TableID=", tableid)
+  upart4 <- paste0("&Frequency=", toupper(freq))
+  upart5 <- paste0("&Year=X&ResultFormat=JSON&") # Year=X gets all years
+  url <- paste0(upart1, upart2, upart3, upart4, upart5)
+  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # sometimes this slow
+
+  df <- fromJSON(result)$BEAAPI$Results$Data %>%
+    mutate(value=cton(DataValue), LineNumber=as.numeric(LineNumber))
+  if(toupper(freq)=="A") df$year <- getyear(df$TimePeriod) else
+    if(toupper(freq)=="Q") df$date <- getdate(df$TimePeriod)
+
+  return(df)
+}
+
+
+
 
 
