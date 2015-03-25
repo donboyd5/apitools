@@ -1,6 +1,16 @@
 # RPackageCreationforbtools.r
 # Don Boyd
-# 1/7/2015
+# 3/25/2015
+
+# You can learn more about package authoring with RStudio at:
+#
+#   http://r-pkgs.had.co.nz/
+#
+# Some useful keyboard shortcuts for package authoring:
+#
+#   Build and Reload Package:  'Ctrl + Shift + B'
+#   Check Package:             'Ctrl + Shift + E'
+#   Test Package:              'Ctrl + Shift + T'
 
 # http://www.molecularecologist.com/2013/11/using-github-with-r-and-rstudio/
 # https://www.rstudio.com/ide/docs/version_control/overview
@@ -66,19 +76,19 @@ install("apitools")
 # # remove.packages("apitools")
 #
 #
-# # here is a good example of how to document a function
+# # here is an example of how to document a function
 #
-# #' @title Sum of Vector Elements
+# #' @title Capitalize first letter of each word
 # #'
-# #' @description
-# #' \code{sum} returns the sum of all the values present in its arguments.
-# #'
-# #' @details
-# #' This is a generic function: methods can be defined for it directly
-# #' or via the \code{Summary} group generic.  For this to work properly,
-# #' the arguments \code{...} should be unnamed, and dispatch is on the
-# #' first argument.'
-# sum <- function(..., na.rm = TRUE) {}
+# #' @description \code{capwords} capitalize first letter of each word
+# #' @usage capwords(s)
+# #' @param s The string to capitalize words of
+# #' @details All white space is removed from the trailing (right) side of the string.
+# #' @return The initial-capped result.
+# #' @keywords capwords
+# #' @export
+# #' @examples
+# #' capwords("string to capitalize words in")
 #
 
 
