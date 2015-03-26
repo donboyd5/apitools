@@ -4,7 +4,7 @@
 \alias{NIPA_Data}
 \title{Get Data from a NIPA Table or a NIPA Underlying Detail Table (NIUnderlyingDetail)}
 \usage{
-NIPA_Data(tableid, freq, dsname, key)
+NIPA_Data(tableid, freq, dsname, key, verbose)
 }
 \arguments{
 \item{tableid}{the BEA table identifier (see \code{BEA_ParamVals})}
@@ -14,6 +14,8 @@ NIPA_Data(tableid, freq, dsname, key)
 \item{dsname}{text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})}
 
 \item{key}{Your BEA API key (can be obtained for free - check www.bea.gov)}
+
+\item{verbose}{default is FALSE}
 }
 \value{
 data frame with data
@@ -29,6 +31,7 @@ Queries the BEA API to get data
 \examples{
 # quarterly gdp percent change NIPA TableID 1 ####
 head(NIPA_Data(1, "q"))
+require(dplyr)
 gdppch <- NIPA_Data(1, "q") \%>\% # NIPA is default dsname so don't have to specify it
   filter(SeriesCode=="A191RL") \%>\%
   select(date, gdppch=value)

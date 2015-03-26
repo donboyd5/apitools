@@ -4,9 +4,11 @@
 \alias{NIPATableIDs}
 \title{Get a Vector of TableIDs Corresponding to NIPA Table Numbers}
 \usage{
-NIPATableIDs(nipatablist, dsname, key)
+NIPATableIDs(nipatabvec, dsname, key)
 }
 \arguments{
+\item{nipatabvec}{character vector with partial NIPA table names}
+
 \item{dsname}{text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})}
 
 \item{key}{Your BEA API key (can be obtained for free - check www.bea.gov)}

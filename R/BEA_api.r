@@ -1,4 +1,7 @@
 
+# Note that in the main package file, I have: @import dplyr so that we can access dplyr functions
+# Throughout this file, the use of dplyr will generate a "no visible binding for global variable"
+# note. However, it is not an error - it is ok.
 
 # See http://www.bea.gov/API/bea_web_service_api_user_guide.htm for table ids; also, use functions below
 
@@ -13,7 +16,7 @@
 #' @description
 #' \code{BEA_DSlist} returns a data frame with a list of available datasets
 #'
-#' @usage BEA_DSlist(your_bea_key)
+#' @usage BEA_DSlist(key)
 #' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
 #' @details
 #' Queries the BEA API to get a list of available datasets
@@ -23,12 +26,10 @@
 #' @examples
 #' bea.ds <- BEA_DSlist() # don't need to give it a key if you have yours set
 BEA_DSlist <- function(key=BEA_defaultkey()){
-  require(RCurl)
-  require(jsonlite)
   url <- paste0(BEA_url(), "?&UserID=", key, "&method=GETDATASETLIST&")
-  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
-  # fromJSON(results) # to see full structure
-  fromJSON(result)$BEAAPI$Results$Dataset # returns a data frame
+  result <- RCurl::getURL(url, .opts=RCurl::curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
+  # jsonlite::fromJSON(results) # to see full structure
+  jsonlite::fromJSON(result)$BEAAPI$Results$Dataset # returns a data frame
 }
 
 
@@ -40,7 +41,7 @@ BEA_DSlist <- function(key=BEA_defaultkey()){
 #' Pay particular attention to whether a data set will accept multiple table flags, or whether tables must be
 #' retrieved one by one
 #'
-#' @usage BEA_DSparams(dsname, your_bea_key)
+#' @usage BEA_DSparams(dsname, key)
 #' @param dsname text name of the dataset (see \code{BEA_DSlist})
 #' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
 #' @details
@@ -60,11 +61,9 @@ BEA_DSlist <- function(key=BEA_defaultkey()){
 #' BEA_DSparams("NIUnderlyingDetail")
 #' BEA_DSparams("RegionalData")
 BEA_DSparams <- function(dsname, key=BEA_defaultkey()) {
-  require(RCurl)
-  require(jsonlite)
   url <- paste0(BEA_url(), "?&UserID=", key, "&method=GetParameterList&datasetname=", dsname,"&")
-  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
-  df <- fromJSON(result)$BEAAPI$Results$Parameter # returns a data frame
+  result <- RCurl::getURL(url, .opts=RCurl::curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
+  df <- jsonlite::fromJSON(result)$BEAAPI$Results$Parameter # returns a data frame
   return(df)
 }
 
@@ -77,29 +76,29 @@ BEA_DSparams <- function(dsname, key=BEA_defaultkey()) {
 #' Pay particular attention to whether a data set will accept multiple table flags, or whether tables must be
 #' retrieved one by one
 #'
-#' @usage BEA_ParamVals(dsname, your_bea_key)
+#' @usage BEA_ParamVals(dsname, pname, key)
 #' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})
 #' @param pname text name of the parameter of interest (e.g., "TableID" for the dataset "NIPA")  (see \code{BEA_DSparams})
 #' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
 #' @details
-#' Queries the BEA API to get allowable values for a parameter of interest for a dataset of interest. Particularly useful datasets are NIPA and NIUnderlyingDetail
+#' Queries the BEA API to get allowable values for a parameter of interest for a dataset of interest.
+#' Particularly useful datasets are NIPA and NIUnderlyingDetail
 #' @return data frame with information about allowable values for the parameter of interest
 #' @keywords BEA_ParamVals
 #' @export
 #' @examples
 #' nipa.tablist <- BEA_ParamVals("NIPA", "TableID") # don't need to give a key if you have yours set
 #' head(nipa.tablist)
-#' nipa.uld.tablist <- BEA_ParamVals("NIUnderlyingDetail", "TableID") # don't need to give a key if you have yours set
+#' # don't need to give a key if you have yours set
+#' nipa.uld.tablist <- BEA_ParamVals("NIUnderlyingDetail", "TableID")
 #' head(nipa.uld.tablist)
 #' BEA_ParamVals("RegionalData", "KeyCode") # TPI_SI is Total personal income (state annual income)
 BEA_ParamVals <- function(dsname, pname, key=BEA_defaultkey()) {
-  require(RCurl)
-  require(jsonlite)
   url <- paste0(BEA_url(), "?&UserID=", key,
                 "&method=GetParameterValues&datasetname=", dsname,
                 "&ParameterName=", pname,"&")
-  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
-  df <- fromJSON(result)$BEAAPI$Results$ParamValue # returns a data frame
+  result <- RCurl::getURL(url, .opts=RCurl::curlOptions(followlocation=TRUE)) # get character var with all the info, in JSON format
+  df <- jsonlite::fromJSON(result)$BEAAPI$Results$ParamValue # returns a data frame
   return(df)
 }
 
@@ -112,11 +111,12 @@ BEA_ParamVals <- function(dsname, pname, key=BEA_defaultkey()) {
 #' Pay particular attention to whether a data set will accept multiple table flags, or whether tables must be
 #' retrieved one by one
 #'
-#' @usage NIPA_Data(tableid, freq, dsname, key)
+#' @usage NIPA_Data(tableid, freq, dsname, key, verbose)
 #' @param tableid the BEA table identifier (see \code{BEA_ParamVals})
 #' @param freq "q" or "a"
 #' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})
 #' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
+#' @param verbose default is FALSE
 #' @details
 #' Queries the BEA API to get data
 #' @return data frame with data
@@ -125,15 +125,13 @@ BEA_ParamVals <- function(dsname, pname, key=BEA_defaultkey()) {
 #' @examples
 #' # quarterly gdp percent change NIPA TableID 1 ####
 #' head(NIPA_Data(1, "q"))
+#' require(dplyr)
 #' gdppch <- NIPA_Data(1, "q") %>% # NIPA is default dsname so don't have to specify it
 #'   filter(SeriesCode=="A191RL") %>%
 #'   select(date, gdppch=value)
 #' head(gdppch)
 NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey(), verbose=FALSE) {
   # NOTE: freq should be q or a
-  require(RCurl)
-  require(jsonlite)
-  require(dplyr)
   if(verbose) print(paste0("Getting TableID: ", tableid))
 
   upart1 <- paste0(BEA_url(), "?&UserID=", key)
@@ -142,9 +140,9 @@ NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey(), ve
   upart4 <- paste0("&Frequency=", toupper(freq))
   upart5 <- paste0("&Year=X&ResultFormat=JSON&") # Year=X gets all years
   url <- paste0(upart1, upart2, upart3, upart4, upart5)
-  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # sometimes this slow
+  result <- RCurl::getURL(url, .opts=RCurl::curlOptions(followlocation=TRUE)) # sometimes this slow
 
-  df <- fromJSON(result)$BEAAPI$Results$Data %>%
+  df <- jsonlite::fromJSON(result)$BEAAPI$Results$Data %>%
     mutate(value=cton(DataValue), LineNumber=as.numeric(LineNumber))
   if(toupper(freq)=="A") df$year <- getyear(df$TimePeriod) else
     if(toupper(freq)=="Q") df$date <- getdate(df$TimePeriod)
@@ -157,7 +155,8 @@ NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey(), ve
 #' @title Get a Vector of TableIDs Corresponding to NIPA Table Numbers
 #' @description
 #' \code{NIPATableIDs} returns a vector of TableIDs corresponding to NIPA table numbers
-#' @usage NIPATableIDs(nipatablist, dsname, key)
+#' @usage NIPATableIDs(nipatabvec, dsname, key)
+#' @param nipatabvec character vector with partial NIPA table names
 #' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})
 #' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
 #' @details
@@ -183,7 +182,7 @@ NIPATableIDs <- function(nipatabvec, dsname="NIPA", key=BEA_defaultkey()) {
 #'
 #' @description
 #' \code{NIPA_DataMult} returns a data frame with multiple BEA tables
-#' @usage NIPA_DataMult(nipatablenames, dsname, key)
+#' @usage NIPA_DataMult(nipatablenames, freq, dsname, key)
 #' @param nipatablenames a character vector with NIPA table numbers (see example below); default: no default
 #' @param freq "q" or "a"; default: "q"
 #' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist}); default: "NIPA"
@@ -194,13 +193,14 @@ NIPATableIDs <- function(nipatabvec, dsname="NIPA", key=BEA_defaultkey()) {
 #' @keywords NIPA_DataMult
 #' @export
 #' @examples
+#' require(dplyr)
 #' nipatabvec <- c("2.1", "2.3.4", "2.3.6", "3.3", "3.9.6", "3.10.6")
 #' df <- NIPA_DataMult(nipatabvec) # this can take a while
 #' head(df)
-#' count(df2, TableID, Description)
+#' count(df, TableID, Description)
 NIPA_DataMult <- function(nipatablenames, freq="q", dsname="NIPA", key=BEA_defaultkey()) {
   tlist <- NIPATableIDs(nipatablenames, dsname, key=BEA_defaultkey()) # get TableIDs for the nipatablenames
-  df <- tlist %>% group_by(TableID, Description) %>%
+  df <-  group_by(tlist, TableID, Description) %>%
     do(NIPA_Data(.$TableID, freq=freq, dsname=dsname, verbose=TRUE))
   return(df)
 }
@@ -230,31 +230,29 @@ NIPA_DataMult <- function(nipatablenames, freq="q", dsname="NIPA", key=BEA_defau
 #' df <- BEA_RgnData("PROP_QI")
 #' head(df)
 BEA_RgnData <- function(keycode, key=BEA_defaultkey()) {
-  require(btools)
-  require(RCurl)
-  require(jsonlite)
-  require(dplyr)
-  require(lubridate)
-  if(str_sub(keycode, -3)=="_QI") freq <- "Q" else freq <- "A"
+  if(stringr::str_sub(keycode, -3)=="_QI") freq <- "Q" else freq <- "A"
   dsname <- "RegionalData"
   upart1 <- paste0(BEA_url(), "?&UserID=", key)
   upart2 <- paste0("&method=GetData&datasetname=", dsname)
   upart3 <- paste0("&KeyCode=", keycode)
   upart4 <- paste0("&Year=ALL&GeoFips=STATE&ResultFormat=JSON&")
   url <- paste0(upart1, upart2, upart3, upart4)
-  result <- getURL(url, .opts=curlOptions(followlocation=TRUE)) # sometimes this slow
+  result <- RCurl::getURL(url, .opts=RCurl::curlOptions(followlocation=TRUE)) # sometimes this slow
 
-  df <- fromJSON(result)$BEAAPI$Results$Data %>%
+  df <- jsonlite::fromJSON(result)$BEAAPI$Results$Data %>%
     mutate(value=cton(DataValue))
+
   if(toupper(freq)=="A") df$year <- getyear(df$TimePeriod) else
     if(toupper(freq)=="Q") df$date <- getdate(df$TimePeriod)
 
-  df <- df %>% select(-DataValue)
+  df <- select(df, -DataValue)
   return(df)
 }
 
 
-# Helper functions -------------------------
+# Helper functions: don't expert these -------------------------
+cton <- function (cvar) as.numeric(gsub("[ ,$%]", "", cvar)) # this is all we need from btools so define it
+
 getyear <- function(TimePeriod) year <- as.numeric(substr(TimePeriod, 1, 4))
 
 getdate <- function(TimePeriod) { # if quarterly data we want the first day of quarter

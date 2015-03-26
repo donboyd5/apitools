@@ -4,7 +4,7 @@
 \alias{BEA_DSparams}
 \title{Get Parameters for a Particular BEA Dataset}
 \usage{
-BEA_DSparams(dsname, your_bea_key)
+BEA_DSparams(dsname, key)
 }
 \arguments{
 \item{dsname}{text name of the dataset (see \code{BEA_DSlist})}

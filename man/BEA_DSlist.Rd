@@ -4,7 +4,7 @@
 \alias{BEA_DSlist}
 \title{Get a List of Datasets Available from the BEA API}
 \usage{
-BEA_DSlist(your_bea_key)
+BEA_DSlist(key)
 }
 \arguments{
 \item{key}{Your BEA API key (can be obtained for free - check www.bea.gov)}

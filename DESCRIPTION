@@ -6,5 +6,9 @@ Date: 2015-03-25
 Author: "Don Boyd <donboyd5@gmail.com> [aut, cre]"
 Maintainer: <donboyd5@gmail.com>
 Description: Easy ways to get info about data available through the BEA and Census APIs, and to then get the data
-License: What license is it under?
+License: GPL-2
 LazyData: TRUE
+Imports: dplyr,
+    jsonlite,
+    RCurl,
+    stringr

@@ -2,6 +2,8 @@
 # Don Boyd
 # 3/25/2015
 
+# DON'T RUN THIS FILE. STUDY IT, AND RUN SELECTED LINES.
+
 # You can learn more about package authoring with RStudio at:
 #
 #   http://r-pkgs.had.co.nz/
@@ -11,6 +13,8 @@
 #   Build and Reload Package:  'Ctrl + Shift + B'
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
+
+#   maybe?? #' @importFrom utils head tail - in the ...-package.r file
 
 # http://www.molecularecologist.com/2013/11/using-github-with-r-and-rstudio/
 # https://www.rstudio.com/ide/docs/version_control/overview
@@ -45,6 +49,24 @@ getOption("defaultPackages")
 document()
 install("apitools")
 # then commit and push
+
+# RUN ONCE: define packages to be listed under Imports (the use_package default) in DESCRIPTION
+devtools::use_package("dplyr")
+devtools::use_package("jsonlite")
+devtools::use_package("RCurl")
+devtools::use_package("stringr")
+
+#  simply fyi, the following code is of potential interest
+#' Chain together multiple operations
+#' @importFrom dplyr %>% # or maybe magrittr
+#' @name %>%
+#' @export
+#' @rdname chain
+#' @usage lhs \%>\% rhs
+NULL
+
+# Before checking, go to: C:\Program Files\R\R-3.1.3\etc\Rprofile.site
+# and comment out: source("E:\\Dropbox (Personal)\\RPrograms PC\\BoydStartup.r", echo=TRUE)
 
 # Steps for creating, revising, documenting, installing, and uploading a package to github:
 # 0.a Load needed packages
@@ -83,19 +105,51 @@ install("apitools")
 #
 #
 # # here is an example of how to document a function
-#
-# #' @title Capitalize first letter of each word
-# #'
-# #' @description \code{capwords} capitalize first letter of each word
-# #' @usage capwords(s)
-# #' @param s The string to capitalize words of
-# #' @details All white space is removed from the trailing (right) side of the string.
-# #' @return The initial-capped result.
-# #' @keywords capwords
-# #' @export
-# #' @examples
-# #' capwords("string to capitalize words in")
-#
+#' @title Get Data from a NIPA Table or a NIPA Underlying Detail Table (NIUnderlyingDetail)
+#'
+#' @description
+#' \code{NIPA_Data} returns a data frame with a list of parameters for the particular dataset
+#' Pay particular attention to whether a data set will accept multiple table flags, or whether tables must be
+#' retrieved one by one
+#'
+#' @usage NIPA_Data(tableid, freq, dsname, key, verbose)
+#' @param tableid the BEA table identifier (see \code{BEA_ParamVals})
+#' @param freq "q" or "a"
+#' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})
+#' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
+#' @param verbose default is FALSE
+#' @details
+#' Queries the BEA API to get data
+#' @return data frame with data
+#' @keywords NIPA_Data
+#' @export
+#' @examples
+#' # quarterly gdp percent change NIPA TableID 1 ####
+#' head(NIPA_Data(1, "q"))
+#' require(dplyr)
+#' gdppch <- NIPA_Data(1, "q") %>% # NIPA is default dsname so don't have to specify it
+#'   filter(SeriesCode=="A191RL") %>%
+#'   select(date, gdppch=value)
+#' head(gdppch)
+NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey(), verbose=FALSE) {
+  # NOTE: freq should be q or a
+  if(verbose) print(paste0("Getting TableID: ", tableid))
+
+  upart1 <- paste0(BEA_url(), "?&UserID=", key)
+  upart2 <- paste0("&method=GetData&datasetname=", dsname)
+  upart3 <- paste0("&TableID=", tableid)
+  upart4 <- paste0("&Frequency=", toupper(freq))
+  upart5 <- paste0("&Year=X&ResultFormat=JSON&") # Year=X gets all years
+  url <- paste0(upart1, upart2, upart3, upart4, upart5)
+  result <- RCurl::getURL(url, .opts=RCurl::curlOptions(followlocation=TRUE)) # sometimes this slow
+
+  df <- jsonlite::fromJSON(result)$BEAAPI$Results$Data %>%
+    mutate(value=cton(DataValue), LineNumber=as.numeric(LineNumber))
+  if(toupper(freq)=="A") df$year <- getyear(df$TimePeriod) else
+    if(toupper(freq)=="Q") df$date <- getdate(df$TimePeriod)
+
+    return(df)
+}
 
 
 

@@ -1,7 +1,8 @@
 #' apitools
 #'
 #' @description
-#' Tools for using the APIs for the U.S. Bureau of Economic Analysis (BEA -- www.bea.gov) and the Census Bureau (www.census.gov).
+#' Tools for using the APIs of the U.S. Bureau of Economic Analysis (BEA -- www.bea.gov) and
+#' the Census Bureau (www.census.gov).
 #'
 #' For information about the BEA API, see http://www.bea.gov/API/bea_web_service_api_user_guide.htm.
 #'
@@ -58,5 +59,5 @@
 #'
 #' @name apitools
 #' @docType package
+#' @import dplyr
 NULL
-

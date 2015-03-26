@@ -4,7 +4,7 @@
 \alias{BEA_ParamVals}
 \title{Get Parameter Values for a Parameter in a Chosen BEA Dataset}
 \usage{
-BEA_ParamVals(dsname, your_bea_key)
+BEA_ParamVals(dsname, pname, key)
 }
 \arguments{
 \item{dsname}{text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist})}
@@ -22,12 +22,14 @@ Pay particular attention to whether a data set will accept multiple table flags,
 retrieved one by one
 }
 \details{
-Queries the BEA API to get allowable values for a parameter of interest for a dataset of interest. Particularly useful datasets are NIPA and NIUnderlyingDetail
+Queries the BEA API to get allowable values for a parameter of interest for a dataset of interest.
+Particularly useful datasets are NIPA and NIUnderlyingDetail
 }
 \examples{
 nipa.tablist <- BEA_ParamVals("NIPA", "TableID") # don't need to give a key if you have yours set
 head(nipa.tablist)
-nipa.uld.tablist <- BEA_ParamVals("NIUnderlyingDetail", "TableID") # don't need to give a key if you have yours set
+# don't need to give a key if you have yours set
+nipa.uld.tablist <- BEA_ParamVals("NIUnderlyingDetail", "TableID")
 head(nipa.uld.tablist)
 BEA_ParamVals("RegionalData", "KeyCode") # TPI_SI is Total personal income (state annual income)
 }

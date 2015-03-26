@@ -4,7 +4,7 @@
 \alias{NIPA_DataMult}
 \title{Get a Data Frame With Multiple BEA Tables}
 \usage{
-NIPA_DataMult(nipatablenames, dsname, key)
+NIPA_DataMult(nipatablenames, freq, dsname, key)
 }
 \arguments{
 \item{nipatablenames}{a character vector with NIPA table numbers (see example below); default: no default}
@@ -25,10 +25,11 @@ vector with TableIDs
 Queries the BEA API to get the data
 }
 \examples{
+require(dplyr)
 nipatabvec <- c("2.1", "2.3.4", "2.3.6", "3.3", "3.9.6", "3.10.6")
 df <- NIPA_DataMult(nipatabvec) # this can take a while
 head(df)
-count(df2, TableID, Description)
+count(df, TableID, Description)
 }
 \keyword{NIPA_DataMult}
 
