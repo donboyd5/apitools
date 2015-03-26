@@ -23,11 +23,14 @@ Queries FRED via quantmod to get the data.
 \examples{
 FRED()
 df <- FRED("gdppi", "q")
-head(df)
+tail(df)
+tail(NIPA("gdppi", "q"))
 df <- FRED("gdp", "a")
-head(df)
+tail(df)
+tail(NIPA("gdp", "a"))
 df <- FRED("rgdp")
-head(df)
+tail(df)
+tail(NIPA("rgdp"))
 }
 \keyword{FRED}
 

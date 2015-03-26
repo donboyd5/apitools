@@ -58,12 +58,27 @@ install("apitools")
 
 # RUN ONCE: define packages to be listed under Imports (the use_package default) in DESCRIPTION
 devtools::use_package("dplyr")
-# devtools::use_package("httr") # not needed I think?? try rerunning without this, and removing from DESCRIPTION
+devtools::use_package("httr") # not needed I think?? try rerunning without this, and removing from DESCRIPTION
 devtools::use_package("jsonlite")
 devtools::use_package("lubridate")
 devtools::use_package("quantmod")
 devtools::use_package("RCurl")
 devtools::use_package("stringr")
+
+
+# http://tex.stackexchange.com/questions/125274/error-font-ts1-zi4r-at-540-not-found
+# per post: I ran into this issue, and after some time spent banging my head against a post, I did reach a solution. After installing the package, run the following steps from the inconsolata README:
+#   initexmf --update-fndb
+#   initexmf --edit-config-file updmap
+#
+# The latter command should open updmap.cfg in your default editor, commonly Notepad.
+# Add the line
+#
+# Map zi4.map
+#
+# to updmap.cfg, save and close. Then, in the command window, type
+#
+# initexmf --mkmaps
 
 #  simply fyi, the following code is of potential interest
 #' Chain together multiple operations

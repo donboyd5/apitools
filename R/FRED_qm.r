@@ -20,11 +20,14 @@
 #' @examples
 #' FRED()
 #' df <- FRED("gdppi", "q")
-#' head(df)
+#' tail(df)
+#' tail(NIPA("gdppi", "q"))
 #' df <- FRED("gdp", "a")
-#' head(df)
+#' tail(df)
+#' tail(NIPA("gdp", "a"))
 #' df <- FRED("rgdp")
-#' head(df)
+#' tail(df)
+#' tail(NIPA("rgdp"))
 FRED <- function(var="help", freq="q") {
   # NOTE: freq should be q or a
   vars <- c("gdp", "gdppi", "rgdp")

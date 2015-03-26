@@ -286,7 +286,7 @@ NIPA <- function(var="help", freq="q", dsname="NIPA", key=BEA_defaultkey()) {
     if(var=="gdppi") {tabid <- 4; line <- 1} else
       if(var=="rgdp") {tabid <- 6; line <- 1}
 
-  df <- NIPA_Data(tabid, freq) %>% mutate(variable=var, value=cton(value))
+  df <- NIPA_Data(tabid, freq) %>% filter(LineNumber==line) %>% mutate(variable=var, value=cton(value))
   if(toupper(freq)=="Q") df <- select(df, date, variable,  SeriesCode, value) else
     if(toupper(freq)=="A") df <- select(df, year, variable, SeriesCode, value)
   return(df)

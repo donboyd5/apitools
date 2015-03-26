@@ -10,8 +10,8 @@ License: GPL-2
 LazyData: TRUE
 Imports: dplyr,
     jsonlite,
+    lubridate,
+    quantmod,
     RCurl,
     stringr,
-    httr,
-    lubridate,
-    quantmod
+    httr
