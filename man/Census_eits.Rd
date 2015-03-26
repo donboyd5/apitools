@@ -18,7 +18,7 @@ data frame
 \code{Census_eits} returns a data frame with a list of available datasets
 }
 \details{
-Queries the Census API to get the requested
+Queries the Census API to get the requested data
 }
 \examples{
 # don't need to give it a key if you have yours set
