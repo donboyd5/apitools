@@ -4,6 +4,12 @@
 
 # DON'T RUN THIS FILE. STUDY IT, AND RUN SELECTED LINES.
 
+# comment out:
+# # source("E:\\Dropbox (Personal)\\RPrograms PC\\BoydStartup.r", echo=TRUE)
+# in C:\Program Files\R\R-3.1.3\etc\Rprofile.site
+# while building the package
+
+
 # You can learn more about package authoring with RStudio at:
 #
 #   http://r-pkgs.had.co.nz/
@@ -52,6 +58,7 @@ install("apitools")
 
 # RUN ONCE: define packages to be listed under Imports (the use_package default) in DESCRIPTION
 devtools::use_package("dplyr")
+devtools::use_package("httr")
 devtools::use_package("jsonlite")
 devtools::use_package("RCurl")
 devtools::use_package("stringr")

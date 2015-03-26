@@ -11,4 +11,5 @@ LazyData: TRUE
 Imports: dplyr,
     jsonlite,
     RCurl,
-    stringr
+    stringr,
+    httr

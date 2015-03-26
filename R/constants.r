@@ -7,3 +7,7 @@ BEA_url <- function() return("http://www.bea.gov/api/data")
 
 BEA_defaultkey <- function() return("21F782AD-56A6-439D-B3D5-9A592F020E26")
 
+Census_defaultkey <- function() return("b27cb41e46ffe3488af186dd80c64dce66bd5e87")
+
+Census_url <- function() return("http://api.census.gov/data/eits/")
+

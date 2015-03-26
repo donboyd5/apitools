@@ -249,17 +249,3 @@ BEA_RgnData <- function(keycode, key=BEA_defaultkey()) {
   return(df)
 }
 
-
-# Helper functions: don't expert these -------------------------
-cton <- function (cvar) as.numeric(gsub("[ ,$%]", "", cvar)) # this is all we need from btools so define it
-
-getyear <- function(TimePeriod) year <- as.numeric(substr(TimePeriod, 1, 4))
-
-getdate <- function(TimePeriod) { # if quarterly data we want the first day of quarter
-  TimePeriod <- as.character(TimePeriod)
-  year <- as.numeric(substr(TimePeriod, 1, 4))
-  qtr <- as.numeric(substr(TimePeriod, 6, 6))
-  month <- qtr * 3 - 2
-  date <- as.Date(ISOdate(year, month, 1))
-  return(date)
-}
