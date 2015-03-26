@@ -9,7 +9,7 @@
 #' @param dsname text in c("qtax", "qpr", "vip") - quarterly tax, quarterly public retirement systems, value in place
 #' @param key Your Census API key (can be obtained for free - check www.census.gov)
 #' @details
-#' Queries the Census API to get the requested
+#' Queries the Census API to get the requested data
 #' @return data frame
 #' @keywords Census_eits
 #' @export
