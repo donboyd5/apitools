@@ -1,4 +1,4 @@
-# RPackageCreationforbtools.r
+# RPackageCreation.r
 # Don Boyd
 # 3/25/2015
 
@@ -58,8 +58,10 @@ install("apitools")
 
 # RUN ONCE: define packages to be listed under Imports (the use_package default) in DESCRIPTION
 devtools::use_package("dplyr")
-devtools::use_package("httr")
+# devtools::use_package("httr") # not needed I think?? try rerunning without this, and removing from DESCRIPTION
 devtools::use_package("jsonlite")
+devtools::use_package("lubridate")
+devtools::use_package("quantmod")
 devtools::use_package("RCurl")
 devtools::use_package("stringr")
 

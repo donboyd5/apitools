@@ -26,7 +26,7 @@ Pay particular attention to whether a data set will accept multiple table flags,
 retrieved one by one
 }
 \details{
-Queries the BEA API to get data
+Queries the BEA API to get a NIPA table
 }
 \examples{
 # quarterly gdp percent change NIPA TableID 1 ####

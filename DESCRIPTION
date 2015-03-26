@@ -12,4 +12,6 @@ Imports: dplyr,
     jsonlite,
     RCurl,
     stringr,
-    httr
+    httr,
+    lubridate,
+    quantmod

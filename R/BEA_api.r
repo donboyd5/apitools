@@ -118,7 +118,7 @@ BEA_ParamVals <- function(dsname, pname, key=BEA_defaultkey()) {
 #' @param key Your BEA API key (can be obtained for free - check www.bea.gov)
 #' @param verbose default is FALSE
 #' @details
-#' Queries the BEA API to get data
+#' Queries the BEA API to get a NIPA table
 #' @return data frame with data
 #' @keywords NIPA_Data
 #' @export
@@ -248,4 +248,48 @@ BEA_RgnData <- function(keycode, key=BEA_defaultkey()) {
   df <- select(df, -DataValue)
   return(df)
 }
+
+
+#' @title Query the BEA API to get a single variable
+#'
+#' @description
+#' \code{NIPA} returns a data frame with requested regional data. Right now only works with annual.
+#' @usage NIPA(var, freq, dsname, key)
+#' @param var a variable name in c("gdp", "gdppi", "rgdp")
+#' @param freq "q" or "a"; default: "q"
+#' @param dsname text name of the dataset (e.g., "NIPA") (see \code{BEA_DSlist}); default: "NIPA"
+#' @param key Your BEA API key (can be obtained for free - check www.bea.gov); default: my key
+#' @details
+#' Queries the BEA API to get the data.
+#' @return data frame with data
+#' @keywords NIPA
+#' @export
+#' @examples
+#' NIPA()
+#' df <- NIPA("gdppi", "q")
+#' head(df)
+#' df <- NIPA("gdp", "a")
+#' head(df)
+#' df <- NIPA("rgdp")
+#' head(df)
+NIPA <- function(var="help", freq="q", dsname="NIPA", key=BEA_defaultkey()) {
+  # NOTE: freq should be q or a
+  # NIPATableIDs("1.1.6")
+  vars <- c("gdp", "gdppi", "rgdp")
+  if(!var %in% vars) {
+    print("Available variables are: ")
+    print(vars)
+    return()
+  }
+
+  if(var=="gdp") {tabid <- 5; line <- 1} else
+    if(var=="gdppi") {tabid <- 4; line <- 1} else
+      if(var=="rgdp") {tabid <- 6; line <- 1}
+
+  df <- NIPA_Data(tabid, freq) %>% mutate(variable=var, value=cton(value))
+  if(toupper(freq)=="Q") df <- select(df, date, variable,  SeriesCode, value) else
+    if(toupper(freq)=="A") df <- select(df, year, variable, SeriesCode, value)
+  return(df)
+}
+
 
