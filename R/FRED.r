@@ -40,9 +40,11 @@ FRED <- function(svec, key=FRED_defaultkey(), full=FALSE) {
     df <- df %>% filter(row_number() >= firstnonna)
     ddiff <- df$date[nrow(df)] - df$date[nrow(df)-1] # get number of days between last and 2nd to last observation
     # guess at the frequency of the data; probably can get this from metadata
-    if(ddiff>=27 & ddiff<=32) freq <- "M" else
-      if(ddiff>=85 & ddiff<=95) freq <- "Q" else
-        if(ddiff>=360 & ddiff<=370) freq <- "A"
+    if(ddiff>=0 & ddiff<7) freq <- "D" else
+      if(ddiff>=27 & ddiff<=32) freq <- "M" else
+        if(ddiff>=85 & ddiff<=95) freq <- "Q" else
+          if(ddiff>=360 & ddiff<=370) freq <- "A" else
+            freq <- "Unknown"
     df <- df %>% mutate(freq=freq, year=lubridate::year(date)) # get the year for all data
     return(df)
   }

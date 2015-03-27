@@ -49,6 +49,9 @@
 
 getOption("defaultPackages")
 
+devtools::install_github("donboyd5/apitools")
+library(apitools)
+
 # Once the package is in full gear, here are the basic steps, DETAILED below
 # library(devtools)
 # library(roxygen2)
