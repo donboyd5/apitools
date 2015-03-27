@@ -9,9 +9,9 @@ Description: Easy ways to get info about data available through the BEA and Cens
 License: GPL-2
 LazyData: TRUE
 Imports: dplyr,
+    httr,
     jsonlite,
     lubridate,
     quantmod,
     RCurl,
-    stringr,
-    httr
+    stringr

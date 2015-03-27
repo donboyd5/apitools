@@ -8,27 +8,27 @@
 #' @title Query FRED via quantmod to get a single variable
 #'
 #' @description
-#' \code{FRED} returns a data frame with requested regional data. Right now only works with annual.
-#' @usage FRED(var, freq)
+#' \code{FREDqm} returns a data frame with requested regional data. Right now only works with annual.
+#' @usage FREDqm(var, freq)
 #' @param var a variable name in c("gdp", "gdppi", "rgdp")
 #' @param freq "q" or "a"; default: "q"
 #' @details
 #' Queries FRED via quantmod to get the data.
 #' @return data frame with data
-#' @keywords FRED
+#' @keywords FREDqm
 #' @export
 #' @examples
-#' FRED()
-#' df <- FRED("gdppi", "q")
+#' FREDqm()
+#' df <- FREDqm("gdppi", "q")
 #' tail(df)
 #' tail(NIPA("gdppi", "q"))
-#' df <- FRED("gdp", "a")
+#' df <- FREDqm("gdp", "a")
 #' tail(df)
 #' tail(NIPA("gdp", "a"))
-#' df <- FRED("rgdp")
+#' df <- FREDqm("rgdp")
 #' tail(df)
 #' tail(NIPA("rgdp"))
-FRED <- function(var="help", freq="q") {
+FREDqm <- function(var="help", freq="q") {
   # NOTE: freq should be q or a
   vars <- c("gdp", "gdppi", "rgdp")
   if(var=="help") {
