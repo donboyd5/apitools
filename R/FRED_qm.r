@@ -31,18 +31,19 @@
 FRED <- function(var="help", freq="q") {
   # NOTE: freq should be q or a
   vars <- c("gdp", "gdppi", "rgdp")
-  if(!var %in% vars) {
+  if(var=="help") {
     print("Available variables are: ")
     print(vars)
     return()
   }
 
-  if(var=="gdp" & freq=="q") sym <- "GDP" else
-    if(var=="gdp" & freq=="a") sym <- "GDPA" else
-      if(var=="gdppi" & freq=="q") sym <- "GDPCTPI" else
-        if(var=="gdppi" & freq=="a") sym <- "B191RG3A086NBEA" else
-          if(var=="rgdp" & freq=="q") sym <- "GDPC1" else
-            if(var=="rgdp" & freq=="a") sym <- "GDPCA"
+  if(!var %in% vars) sym <- var else
+    if(var=="gdp" & freq=="q") sym <- "GDP" else
+      if(var=="gdp" & freq=="a") sym <- "GDPA" else
+        if(var=="gdppi" & freq=="q") sym <- "GDPCTPI" else
+          if(var=="gdppi" & freq=="a") sym <- "B191RG3A086NBEA" else
+            if(var=="rgdp" & freq=="q") sym <- "GDPC1" else
+              if(var=="rgdp" & freq=="a") sym <- "GDPCA"
 
   df <- as.data.frame(quantmod::getSymbols(sym, src="FRED", auto.assign=FALSE)) %>%
     mutate(value=.[, 1], timeperiod=rownames(.), variable=var, symbol=sym)

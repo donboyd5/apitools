@@ -11,3 +11,5 @@ Census_defaultkey <- function() return("b27cb41e46ffe3488af186dd80c64dce66bd5e87
 
 Census_url <- function() return("http://api.census.gov/data/eits/")
 
+FRED_defaultkey <- function() return("c3cdbed96e921121504660952b0c6e0b")
+
