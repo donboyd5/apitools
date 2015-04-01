@@ -66,6 +66,7 @@ devtools::use_package("jsonlite")
 devtools::use_package("lubridate")
 devtools::use_package("quantmod")
 devtools::use_package("RCurl")
+devtools::use_package("readr")
 devtools::use_package("stringr")
 
 
@@ -181,3 +182,15 @@ NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey(), ve
 
 
 
+# loads, if needed ####
+library(btools) # library that I created - note that lubridate will mask a few of the functions in here, with better or different versions - mdy, month, year
+library(apitools) # library I created
+library(foreign) # various import and export routines - e.g., for reading Stata files
+library(gdata) # for reading spreadsheets
+library(plyr) # always load BEFORE loading dplyr; try to stop needing this
+library(ggplot2)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(stringr)

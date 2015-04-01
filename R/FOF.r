@@ -1,7 +1,7 @@
 
 
 # Functions to get the Federal Reserve Board's Flow of Funds Z1 data
-# Typically, just run getz1all to download and parse the data, returning a data frame
+# Typically, just run z1all to download and parse the data, returning a data frame
 
 downloadz1 <- function(z1dir=tempdir()) {
   # Download the Federal Reserve Board's latest Z1 Flow of Funds data
@@ -30,8 +30,9 @@ getz1vec <- function(z1dir=tempdir()) {
   print("Reading large FRB Z1 file, could take a while...")
   z1dir <- gsub("\\\\$", "", z1dir) # remove any trailing slashes from z1dir so that we can safely add a slash
   con <- unz(paste0(z1dir, "/", "FRB_Z1.zip"), "Z1_data.xml") # read directly from zip file
-  z1vec <- scan(con, what="", sep="\n", nlines=-1)
-  close(con)
+  # z1vec <- scan(con, what="", sep="\n", nlines=-1)
+  z1vec <- readr::read_lines(con) # Hadley Wickham's readr package - much faster than scan
+  # close(con)
   return(z1vec)
 }
 
@@ -53,8 +54,10 @@ getvardf <- function(z1vec) {
   sdesc <- stringr::str_sub(sdesc, 1, regexpr("<", sdesc, fixed=TRUE) - 1)
 
   # find the start and end of each data series
-  sstart <- which(z1vec=="</frb:Annotations>") + 1 # slash-frbanno is right BEFORE the start of each series
-  send <- which(z1vec=="</kf:Series>") - 1 # slash-kfseries is right AFTER end of each series
+  # sstart <- which(z1vec=="</frb:Annotations>") + 1 # slash-frbanno is right BEFORE the start of each series
+  sstart <- which(stringr::str_sub(z1vec, 1, 18)=="</frb:Annotations>") + 1
+  # send <- which(z1vec=="</kf:Series>") - 1 # slash-kfseries is right AFTER end of each series
+  send <- which(stringr::str_sub(z1vec, 1, 12)=="</kf:Series>") - 1 # slash-kfseries is right AFTER end of each series
   nobs <- send - sstart + 1 # number of observations
   vars <- data_frame(variable=sname, freq, description=sdesc, sstart, send, nobs, rownum=1:length(sname))
   return(vars)
@@ -105,7 +108,7 @@ cleandate <- function(df) {
 #' @examples
 #' z1 <- getz1df.fromfile()
 #' head(z1)
-#' # or from existing fof dir: z1 <- getz1df.fromfile(fof)
+#' # or from existing fof dir: z1 <- getz1df.fromfile(fof) where fof <- "e.Data.FOF."
 getz1df.fromfile <- function(z1dir=tempdir()) {
   z1vec <- getz1vec(z1dir)
   vars <- getvardf(z1vec)
@@ -144,20 +147,6 @@ getz1df.fromfile <- function(z1dir=tempdir()) {
 
 
 
-# testing ground
-# fof <- "E:\\Data\\FOF\\"
-# z1 <- getz1df.fromfile(fof)
-
-# z1data <- z1
-# z1data <- cleandate(z1data)
-# count(z1data, freq)
-# str(z1data)
-# ht(z1data)
-
-# see http://stackoverflow.com/questions/6668963/how-to-prevent-ifelse-from-turning-date-objects-into-numeric-objects
-# safe.ifelse <- function(cond, yes, no) structure(ifelse(cond, yes, no), class = class(yes))
-
-
 #' @title Get latest version of ALL Federal Reserve Board Z1 Flow of Funds data from web
 #'
 #' @description
@@ -179,4 +168,21 @@ z1all <- function(z1dir=tempdir()) {
   z1data <- getz1df.fromfile()
   return(z1data)
 }
+
+
+
+# playing around below here ####
+# testing ground
+# fof <- "E:\\Data\\FOF\\"
+# z1 <- getz1df.fromfile(fof)
+
+# z1data <- z1
+# z1data <- cleandate(z1data)
+# count(z1data, freq)
+# str(z1data)
+# ht(z1data)
+
+# see http://stackoverflow.com/questions/6668963/how-to-prevent-ifelse-from-turning-date-objects-into-numeric-objects
+# safe.ifelse <- function(cond, yes, no) structure(ifelse(cond, yes, no), class = class(yes))
+
 

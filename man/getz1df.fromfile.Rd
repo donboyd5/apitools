@@ -22,7 +22,7 @@ Downloads the data, reads it with scan, parses data, and cleans data
 \examples{
 z1 <- getz1df.fromfile()
 head(z1)
-# or from existing fof dir: z1 <- getz1df.fromfile(fof)
+# or from existing fof dir: z1 <- getz1df.fromfile(fof) where fof <- "e.Data.FOF."
 }
 \keyword{getz1df.fromfile}
 
