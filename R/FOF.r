@@ -1,7 +1,7 @@
 
 
 # Functions to get the Federal Reserve Board's Flow of Funds Z1 data
-# Typically, just run z1all to download and parse the data, returning a data frame
+# Typically, just run z1 to download and parse the data, returning a data frame
 
 downloadz1 <- function(z1dir=tempdir()) {
   # Download the Federal Reserve Board's latest Z1 Flow of Funds data
@@ -150,20 +150,20 @@ getz1df.fromfile <- function(z1dir=tempdir()) {
 #' @title Get latest version of ALL Federal Reserve Board Z1 Flow of Funds data from web
 #'
 #' @description
-#' \code{z1all} Downloads latest Z1 data from the FRB site (http://www.federalreserve.gov/datadownload)
+#' \code{z1} Downloads latest Z1 data from the FRB site (http://www.federalreserve.gov/datadownload)
 #' and returns a data frame with all Z1 data
 #'
-#' @usage z1all(z1dir)
+#' @usage z1(z1dir)
 #' @param z1dir defines a directory where the Z1 zip file will be stored; default is tempdir()
 #' @details
 #' Downloads the data, reads it with scan, parses data, and cleans data
 #' @return data frame
-#' @keywords z1all
+#' @keywords z1
 #' @export
 #' @examples
-#' z1 <- z1all()
-#' head(z1)
-z1all <- function(z1dir=tempdir()) {
+#' z1df <- z1()
+#' head(z1df)
+z1 <- function(z1dir=tempdir()) {
   downloadz1(z1dir)
   z1data <- getz1df.fromfile()
   return(z1data)
