@@ -22,9 +22,13 @@ data frame
 }
 \details{
 Queries the FRED API to get the requested data
+
 "Nicknames" are allowed for certain commonly used series:
+
    gdp.q, gdp.a         for nominal gdp, quarterly or annual
+
    gdppi.q, gdppi.a     for gdp price index, quarterly or annual
+
    rgdp.q, rgdp.a       for real gdp, quarterly or annual
 }
 \examples{
