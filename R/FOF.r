@@ -31,7 +31,7 @@ getz1vec <- function(z1dir=tempdir()) {
   z1dir <- gsub("\\\\$", "", z1dir) # remove any trailing slashes from z1dir so that we can safely add a slash
   con <- unz(paste0(z1dir, "/", "FRB_Z1.zip"), "Z1_data.xml") # read directly from zip file
   # z1vec <- scan(con, what="", sep="\n", nlines=-1)
-  z1vec <- readr::read_lines(con) # Hadley Wickham's readr package - much faster than scan
+  z1vec <- readr::read_lines(con) # Hadley Wickham's readr package - faster than scan
   # close(con)
   return(z1vec)
 }
@@ -40,6 +40,7 @@ getz1vec <- function(z1dir=tempdir()) {
 getvardf <- function(z1vec) {
   # get a data frame with info on variables - one row per variable - from the z1 vector
   print("Getting data frame with information about each variable...")
+
   # get series names and frequencies
   isname <- which(stringr::str_sub(z1vec, 1, 10)=="<kf:Series")
   temp <- z1vec[isname] # put the name and frequency info into temp, and then parse it
@@ -59,6 +60,7 @@ getvardf <- function(z1vec) {
   # send <- which(z1vec=="</kf:Series>") - 1 # slash-kfseries is right AFTER end of each series
   send <- which(stringr::str_sub(z1vec, 1, 12)=="</kf:Series>") - 1 # slash-kfseries is right AFTER end of each series
   nobs <- send - sstart + 1 # number of observations
+
   vars <- data_frame(variable=sname, freq, description=sdesc, sstart, send, nobs, rownum=1:length(sname))
   return(vars)
 }
@@ -66,7 +68,7 @@ getvardf <- function(z1vec) {
 
 cleandate <- function(df) {
   getfdq <- function(date) {
-    # get first day of quarter from a date that is first day of final month in quarter
+    # get first day of quarter from a date that is some other date in the quarter
     fmq <- function(m) return(trunc((m-1)/3) * 3) # first month of the quarter, for months 0-11
     fdq <- as.POSIXlt(date)
     fdq$mon <- fmq(fdq$mon) # go to start of quarter
@@ -172,6 +174,7 @@ z1 <- function(z1dir=tempdir()) {
 
 
 # playing around below here ####
+
 # testing ground
 # fof <- "E:\\Data\\FOF\\"
 # z1 <- getz1df.fromfile(fof)
@@ -183,6 +186,6 @@ z1 <- function(z1dir=tempdir()) {
 # ht(z1data)
 
 # see http://stackoverflow.com/questions/6668963/how-to-prevent-ifelse-from-turning-date-objects-into-numeric-objects
-# safe.ifelse <- function(cond, yes, no) structure(ifelse(cond, yes, no), class = class(yes))
+# safe.ifelse <- function(cond, yes, no) structure(ifelse(cond, yes, no), class = class(yes)) # Hadley Wickam wrote this
 
 

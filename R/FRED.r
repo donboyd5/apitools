@@ -11,6 +11,10 @@
 #' default returns series name, date, and value
 #' @details
 #' Queries the FRED API to get the requested data
+#' "Nicknames" are allowed for certain commonly used series:
+#'    gdp.q, gdp.a         for nominal gdp, quarterly or annual
+#'    gdppi.q, gdppi.a     for gdp price index, quarterly or annual
+#'    rgdp.q, rgdp.a       for real gdp, quarterly or annual
 #' @return data frame
 #' @keywords FRED
 #' @export
@@ -26,10 +30,24 @@
 #' count(df, series)
 #' count(df, freq)
 FRED <- function(svec, key=FRED_defaultkey(), full=FALSE) {
+  # if(is.null(svec)) print("Allowable series nicknames:")
+
   fredroot <- "http://api.stlouisfed.org/fred/"
   fredpost <- paste0("&api_key=", key, "&file_type=json")
 
+  checknickname <- function(series) {
+    # series I use often
+    if(series=="gdp.q") series <- "GDP" else
+      if(series=="gdp.a") series <- "GDPA" else
+        if(series=="gdppi.q") series <- "GDPCTPI" else
+          if(series=="gdppi.a") series <- "B191RG3A086NBEA" else
+            if(series=="rgdp.q") series <- "GDPC1" else
+              if(series=="rgdp.a") series <- "GDPCA"
+    return(series)
+  }
+
   getoneseries <- function(series) {
+    series <- checknickname(series)
     seriesinfo <- paste0("series/observations?series_id=", series)
     url <- paste0(fredroot, seriesinfo, fredpost)
     result <- jsonlite::fromJSON(url)
