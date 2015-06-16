@@ -108,9 +108,11 @@ cleandate <- function(df) {
 #' @keywords getz1df.fromfile
 #' @export
 #' @examples
+#'\dontrun{
 #' z1 <- getz1df.fromfile()
 #' head(z1)
 #' # or from existing fof dir: z1 <- getz1df.fromfile(fof) where fof <- "e.Data.FOF."
+#'}
 getz1df.fromfile <- function(z1dir=tempdir()) {
   z1vec <- getz1vec(z1dir)
   vars <- getvardf(z1vec)
@@ -141,6 +143,7 @@ getz1df.fromfile <- function(z1dir=tempdir()) {
   # Final cleanup
   # uses conditional indexing because ifelse is weird for dates and factors
   z1data <- cleandate(z1data)
+  z1data$date <- as.Date(z1data$date) # get rid of the time component
 
   # when testing, may want to verify uniqueness
   # anyDuplicated(z1data)
@@ -163,8 +166,10 @@ getz1df.fromfile <- function(z1dir=tempdir()) {
 #' @keywords z1
 #' @export
 #' @examples
+#'\dontrun{ # because it would take too long
 #' z1df <- z1()
 #' head(z1df)
+#'}
 z1 <- function(z1dir=tempdir()) {
   downloadz1(z1dir)
   z1data <- getz1df.fromfile()

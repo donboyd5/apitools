@@ -14,10 +14,12 @@
 #' @keywords Census_eits
 #' @export
 #' @examples
+#'\dontrun{
 #' # don't need to give it a key if you have yours set
 #' cen.qtax <- Census_eits("qtax")
 #' cen.qpr <- Census_eits("qpr")
 #' cen.vip <- Census_eits("vip")
+#'}
 Census_eits <- function(dsname, key=Census_defaultkey()) {
   urlpre <- paste0(Census_url(), dsname, "?&key=", key)
   urlpost <- "&get=cell_value,time_slot_name,seasonally_adj,geo_level_code,category_code,data_type_code,error_data"

@@ -18,6 +18,7 @@
 #' @keywords FREDqm
 #' @export
 #' @examples
+#'\dontrun{
 #' FREDqm()
 #' df <- FREDqm("gdppi", "q")
 #' tail(df)
@@ -28,6 +29,7 @@
 #' df <- FREDqm("rgdp")
 #' tail(df)
 #' tail(NIPA("rgdp"))
+#'}
 FREDqm <- function(var="help", freq="q") {
   # NOTE: freq should be q or a
   vars <- c("gdp", "gdppi", "rgdp")

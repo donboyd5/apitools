@@ -23,6 +23,7 @@
 #' @keywords FRED
 #' @export
 #' @examples
+#'\dontrun{
 #' require(dplyr)
 #' df <- FRED("GDP")
 #' head(df)
@@ -33,6 +34,7 @@
 #' tail(df)
 #' count(df, series)
 #' count(df, freq)
+#'}
 FRED <- function(svec, key=FRED_defaultkey(), full=FALSE) {
   # if(is.null(svec)) print("Allowable series nicknames:")
 
@@ -95,6 +97,7 @@ FRED <- function(svec, key=FRED_defaultkey(), full=FALSE) {
 #' @keywords FREDcat
 #' @export
 #' @examples
+#'\dontrun{
 #' require(dplyr)
 #' df <- FREDcat(c(106, 125))
 #' df <- FREDcat(18) # 18 is NIPA, so this will get info on ALL series in the NIPA category and its children
@@ -108,6 +111,7 @@ FRED <- function(svec, key=FRED_defaultkey(), full=FALSE) {
 #' count(df, id, title)
 #' vars <- c("PCDGCC96", "PCNDGC96")
 #' FRED(vars)
+#'}
 FREDcat <- function(catvec, key=FRED_defaultkey()) {
   # get info on all series in all categories and children of those categories in catvec
   fredroot <- "http://api.stlouisfed.org/fred/"
