@@ -170,9 +170,19 @@ NIPA_Data <- function(tableid, freq="q", dsname="NIPA", key=BEA_defaultkey(), ve
 NIPATableIDs <- function(nipatabvec, dsname="NIPA", key=BEA_defaultkey()) {
   tablist <- BEA_ParamVals(dsname, "TableID") # get the list of tables for this dsname
   nipatabvec2 <- paste0("Table ", nipatabvec, ". ") # put NIPA names in form that ensures we are getting a unique table
-  findtab <- function(nipaname) grep(nipaname, tablist$Description, ignore.case=TRUE) # find the TableID for a single NIPA table name
+
+  findtab <- function(nipaname) {
+    i <- grep(nipaname, tablist$Description, ignore.case=TRUE)
+    if(length(i)==0) i <- NA
+    return(i)
+  }
+
   idx <- sapply(nipatabvec2, findtab) # Get all the tableIDs: row indexes of tablist for our desired tables
-  tabs <- tablist[idx, ] # these are the tables we want
+  # these are the tables we want
+  tabs <- tablist[idx, ] %>%
+    as_tibble %>%
+    filter(!is.na(TableID))
+
   return(tabs)
 }
 
